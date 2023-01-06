@@ -36,7 +36,7 @@ class LoginActivity : AppCompatActivity() {
         login = findViewById(R.id.login_button)
         notregisterd = findViewById(R.id.havenotregisterd)
 
-        notregisterd.setOnClickListener {
+        login.setOnClickListener {
             semail = email.text.toString().trim()
             spassword = password.text.toString().trim()
 
