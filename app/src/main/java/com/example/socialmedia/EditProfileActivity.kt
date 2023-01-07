@@ -1,97 +1,114 @@
 package com.example.socialmedia
 
-import android.annotation.SuppressLint
+
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.TextUtils
 import android.widget.*
-import com.google.android.gms.tasks.Continuation
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
+import androidx.appcompat.app.AlertDialog
+import com.example.socialmedia.databinding.ActivityEditProfileBinding
+import com.example.socialmedia.model.Users
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
-import com.google.firebase.firestore.auth.User
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.StorageTask
-import com.google.firebase.storage.UploadTask
-//import com.squareup.picasso.Picasso
+import com.google.firebase.storage.FirebaseStorage
 
 
 
 val firebaseUser=FirebaseAuth.getInstance().currentUser!!
 
 class EditProfileActivity : AppCompatActivity() {
-    private lateinit var bio: EditText
-    private lateinit var fullname: EditText
-    private lateinit var username: EditText
-    private lateinit var deleteaccount: Button
-    private lateinit var changephoto: TextView
-    private lateinit var submitedit: ImageButton
-    private lateinit var dontedit: ImageButton
-
-
-    private lateinit var sbio:String
-    private lateinit var sfullname:String
-    private lateinit var susername:String
-
-
-    private lateinit var auth: FirebaseAuth
-
+//    private lateinit var bio: EditText
+//    private lateinit var fullname: EditText
+//    private lateinit var username: EditText
+//    private lateinit var deleteaccount: Button
+//    private lateinit var changephoto: TextView
+//    private lateinit var submitedit: ImageButton
+//    private lateinit var dontedit: ImageButton
+    private lateinit var binding: ActivityEditProfileBinding
+//
+//    private lateinit var sbio: String
+//    private lateinit var sfullname: String
+//    private lateinit var susername: String
+//
+//
+//    private lateinit var auth: FirebaseAuth
+    private lateinit var database: FirebaseDatabase
+    private lateinit var storage: FirebaseStorage
+    private lateinit var imageUri: Uri
+    private lateinit var dialog: AlertDialog.Builder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_profile)
 
+        binding = ActivityEditProfileBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        auth = Firebase.auth
+        dialog = AlertDialog.Builder(this).setMessage("Updating Profile").setCancelable(false)
 
-        bio = findViewById(R.id.edit_bio)
-        fullname = findViewById(R.id.edit_fullname)
-        username = findViewById(R.id.edit_username)
-        submitedit = findViewById(R.id.submitedit)
-        dontedit = findViewById(R.id.dontedit)
-        changephoto = findViewById(R.id.edit_changephoto)
-        deleteaccount = findViewById(R.id.delete_account)
+        database = FirebaseDatabase.getInstance("https://socialmedia-e0647-default-rtdb.asia-southeast1.firebasedatabase.app")
+        storage = FirebaseStorage.getInstance()
 
+        binding.editChangephoto.setOnClickListener {
+            val intent = Intent()
+            intent.action = Intent.ACTION_GET_CONTENT
+            intent.type = "image/*"
+            startActivityForResult(intent, 1)
+        }
 
+        binding.submitedit.setOnClickListener {
+        if (binding.editUsername.text.isEmpty())
+            Toast.makeText(this,"UserName can not be empty.",Toast.LENGTH_SHORT).show()
+        else if (binding.editFullname.text.isEmpty())
+           Toast.makeText(this,"FullName can not be empty.",Toast.LENGTH_SHORT).show()
+        else if (imageUri == null)
+           Toast.makeText(this,"Please Select an image",Toast.LENGTH_SHORT).show()
+        else uploadData()
+        }
 
-        dontedit.setOnClickListener {
+        binding.dontedit.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
+    }
 
-
-        submitedit.setOnClickListener {
-            sbio = bio.text.toString().trim()
-            sfullname = fullname.text.toString().trim()
-            susername = username.text.toString().trim()
-
-            when {
-                TextUtils.isEmpty(sfullname) -> {
-                    Toast.makeText(this, "Full Name is required", Toast.LENGTH_SHORT).show()
-                }
-                TextUtils.isEmpty(susername) -> {
-                    Toast.makeText(this, "username is required", Toast.LENGTH_SHORT).show()
-                }
-                else -> {
-                    val userRef: DatabaseReference = FirebaseDatabase.getInstance("https://socialmedia-e0647-default-rtdb.asia-southeast1.firebasedatabase.app").reference.child("Users")
-                    //using hashmap to store values
-                    val userMap = HashMap<String, Any>()
-                    userMap["fullname"] = sfullname
-                    userMap["username"] = susername
-                    userMap["bio"] = sbio
-
-                    userRef.child(firebaseUser.uid).updateChildren(userMap)
-
-                    Toast.makeText(this, "Account is updated", Toast.LENGTH_SHORT).show()
-
-                    //forward to home page using intent
+    private fun uploadData() {
+        val reference = storage.reference.child("Users").child(firebaseUser.uid)
+        reference.putFile(imageUri).addOnCompleteListener {
+            if (it.isSuccessful) {
+                reference.downloadUrl.addOnSuccessListener {  task ->
+                    uploadinfo(task.toString())
                 }
             }
+            }
         }
+
+    private fun uploadinfo(imageurl: String) {
+    val user= Users(firebaseUser.uid.toString(),binding.editFullname.text.toString(),
+        firebaseUser.email.toString(),binding.editUsername.text.toString(),binding.editBio.text.toString(),
+        imageurl)
+
+        database.reference.child("Users").child(firebaseUser.uid)
+            .setValue(user).addOnSuccessListener {
+                Toast.makeText(this,"Data sucessfully inserted",Toast.LENGTH_SHORT).show()
+              startActivity(Intent(this, MainActivity::class.java))
         }
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (data != null)
+        {
+            if (data.data !=null)
+            {
+                imageUri=data.data!!
+                binding.editProfileImage.setImageURI(imageUri)
+            }
+        }
+    }
+
 }
+

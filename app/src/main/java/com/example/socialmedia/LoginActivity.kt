@@ -12,19 +12,22 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 
-private lateinit var email: EditText
-private lateinit var password: EditText
-private lateinit var login: Button
-private lateinit var notregisterd: TextView
-
-private lateinit var semail:String
-private lateinit var spassword:String
-
-
-private lateinit var auth: FirebaseAuth
 
 
 class LoginActivity : AppCompatActivity() {
+    private lateinit var email: EditText
+    private lateinit var password: EditText
+    private lateinit var login: Button
+    private lateinit var notregisterd: TextView
+
+    private lateinit var semail:String
+    private lateinit var spassword:String
+
+
+    private lateinit var auth: FirebaseAuth
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
