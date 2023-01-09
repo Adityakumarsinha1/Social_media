@@ -11,7 +11,15 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+# Add this global rule
+    -keepattributes Signature
 
+    # This rule will properly ProGuard all the model classes in
+    # the package com.yourcompany.models.
+    # Modify this rule to fit the structure of your app.
+    -keepclassmembers class com.yourcompany.models.** {
+      *;
+    }
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
 #-keepattributes SourceFile,LineNumberTable

@@ -1,14 +1,18 @@
 package com.example.socialmedia
 
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContentProviderCompat.requireContext
+import com.bumptech.glide.Glide
 import com.example.socialmedia.databinding.ActivityEditProfileBinding
 import com.example.socialmedia.model.Users
+import com.example.socialmedia.util.UserUtil
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
@@ -18,21 +22,9 @@ import com.google.firebase.storage.FirebaseStorage
 val firebaseUser=FirebaseAuth.getInstance().currentUser!!
 
 class EditProfileActivity : AppCompatActivity() {
-//    private lateinit var bio: EditText
-//    private lateinit var fullname: EditText
-//    private lateinit var username: EditText
-//    private lateinit var deleteaccount: Button
-//    private lateinit var changephoto: TextView
-//    private lateinit var submitedit: ImageButton
-//    private lateinit var dontedit: ImageButton
     private lateinit var binding: ActivityEditProfileBinding
-//
-//    private lateinit var sbio: String
-//    private lateinit var sfullname: String
-//    private lateinit var susername: String
-//
-//
-//    private lateinit var auth: FirebaseAuth
+
+
     private lateinit var database: FirebaseDatabase
     private lateinit var storage: FirebaseStorage
     private lateinit var imageUri: Uri
@@ -43,6 +35,19 @@ class EditProfileActivity : AppCompatActivity() {
 
         binding = ActivityEditProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        binding.apply {
+            editFullname.hint=UserUtil.user?.fullname.toString()
+            editUsername.hint = UserUtil.user?.username.toString()
+            editBio.hint = UserUtil.user?.bio.toString()
+        }
+
+        Glide.with(this)
+            .load(UserUtil.user?.imageUrl.toString())
+            .placeholder(R.drawable.profile)
+            .centerCrop()
+            .into(binding.editProfileImage)
 
         dialog = AlertDialog.Builder(this).setMessage("Updating Profile").setCancelable(false)
 
@@ -84,11 +89,11 @@ class EditProfileActivity : AppCompatActivity() {
             }
         }
 
+    @SuppressLint("SuspiciousIndentation")
     private fun uploadinfo(imageurl: String) {
-    val user= Users(firebaseUser.uid.toString(),binding.editFullname.text.toString(),
-        firebaseUser.email.toString(),binding.editUsername.text.toString(),binding.editBio.text.toString(),
+    val user= Users(firebaseUser.uid,binding.editFullname.text.toString(),
+        firebaseUser.email.toString(),binding.editBio.text.toString(),binding.editUsername.text.toString(),
         imageurl)
-
         database.reference.child("Users").child(firebaseUser.uid)
             .setValue(user).addOnSuccessListener {
                 Toast.makeText(this,"Data sucessfully inserted",Toast.LENGTH_SHORT).show()

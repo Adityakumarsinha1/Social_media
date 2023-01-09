@@ -3,14 +3,10 @@ package com.example.socialmedia
 import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import com.example.socialmedia.databinding.ActivityMainBinding
 import com.example.socialmedia.fragment.*
+import com.example.socialmedia.util.UserUtil
 import com.google.firebase.auth.FirebaseAuth
 import androidx.fragment.app.Fragment as fragment
 
@@ -54,6 +50,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        if(FirebaseAuth.getInstance().currentUser==null)
+        {
+            //forwarding to login page
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
+        UserUtil.getCurrentUser()
 
         if (savedInstanceState == null) { // Not configuration change
             homeFragment = HomeFragment()
@@ -116,19 +119,6 @@ class MainActivity : AppCompatActivity() {
         outState.putInt(KEY_SELECTED_INDEX, selectedIndex)
     }
 
-//    to check if user is already logged in
-    override fun onStart() {
-        super.onStart()
-
-        if(FirebaseAuth.getInstance().currentUser==null)
-        {
-            //forwarding to home page
-            val intent= Intent(this@MainActivity,RegisterActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-            finish()
-        }
-    }
 }
 
 private const val HOME = "HOME"

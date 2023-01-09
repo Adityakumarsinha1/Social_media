@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="fragment.SearchFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -54,6 +55,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/searchRV"
+        tools:listitem="@layout/user_item_layout"
         android:layout_below="@+id/app_bar_layout_search" />
 
 </RelativeLayout>
