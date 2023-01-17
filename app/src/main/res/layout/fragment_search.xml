@@ -19,17 +19,17 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="horizontal"
 
                 >
 
-                <ImageView
-                    android:id="@+id/searchfragment_icon"
-                    android:layout_width="50dp"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="250dp"
-                    android:src="@drawable/search" />
+<!--                <ImageView-->
+<!--                    android:id="@+id/searchfragment_icon"-->
+<!--                    android:layout_width="50dp"-->
+<!--                    android:layout_height="40dp"-->
+<!--                    android:layout_marginLeft="250dp"-->
+<!--                    android:src="@drawable/search" />-->
 
 <!--                <TextView-->
 <!--                    android:id="@+id/searchitem"-->
@@ -38,13 +38,14 @@
 <!--                    android:layout_alignParentLeft="true"-->
 <!--                    android:layout_toLeftOf="@+id/searchfragment_icon" />-->
 
-                <EditText
+                <SearchView
                     android:id="@+id/search_item"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
+                    android:iconifiedByDefault="false"
                     android:layout_marginLeft="40dp"
-                    android:hint="Search"
+                    android:queryHint="Search by username"
                     android:gravity="center"
                     android:inputType="textPersonName" />
 
@@ -56,7 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/searchRV"
-        tools:listitem="@layout/user_item_layout"
-        android:layout_below="@+id/app_bar_layout_search" />
+        android:layout_below="@+id/app_bar_layout_search"
+        tools:listitem="@layout/user_item_layout"/>
 
 </RelativeLayout>
