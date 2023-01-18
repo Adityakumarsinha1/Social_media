@@ -28,7 +28,6 @@ class SearchFragment  : Fragment(R.layout.fragment_search) {
 
     val mUser = ArrayList<Users>()
     lateinit var useradapter: Useradapter
-    lateinit var recyclerView: RecyclerView
 //    binding our fragment with the nav iew
 
     private var _binding: FragmentSearchBinding? = null
@@ -37,9 +36,9 @@ class SearchFragment  : Fragment(R.layout.fragment_search) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSearchBinding.bind(view)
 
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        binding.searchRV.layoutManager = LinearLayoutManager(context)
         useradapter = Useradapter()
-        recyclerView.adapter = useradapter
+        binding.searchRV.adapter = useradapter
 
 
         binding.searchItem.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
@@ -85,38 +84,38 @@ class SearchFragment  : Fragment(R.layout.fragment_search) {
                         mUser.add(user)
                     }
                 }
-                useradapter.notifyDataSetChanged()
+                useradapter.updateUserList(mUser)
             }
         })
     }
-    private fun retrieveUser()
-    {
-        val usersSearchRef=FirebaseDatabase.getInstance().reference.child("Users")//table name:Users
-        usersSearchRef.addValueEventListener(object:ValueEventListener
-        {
-            override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(context,"Could not read from Database",Toast.LENGTH_LONG).show()
-            }
-
-            @SuppressLint("NotifyDataSetChanged")
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                mUser.clear()
-                for (snapShot in dataSnapshot.children) {
-                    val user = snapShot.getValue(User::class.java)
-                    val fullName = snapShot.child("fullname").value.toString()
-                    val userName = snapShot.child("username").value.toString()
-                    val bio = snapShot.child("bio").value.toString()
-                    val image = snapShot.child("image").value.toString()
-                    val uid = snapShot.child("uid").value.toString()
-
-                    Users(userName, fullName, bio, image, uid)
-                    if (user != null) {
-                        mUser.add(Users(userName, fullName, bio, image, uid))
-                    }
-                    useradapter.notifyDataSetChanged()
-                }
-            }
-        })
-    }
+//    private fun retrieveUser()
+//    {
+//        val usersSearchRef=FirebaseDatabase.getInstance().reference.child("Users")//table name:Users
+//        usersSearchRef.addValueEventListener(object:ValueEventListener
+//        {
+//            override fun onCancelled(error: DatabaseError) {
+//                Toast.makeText(context,"Could not read from Database",Toast.LENGTH_LONG).show()
+//            }
+//
+//            @SuppressLint("NotifyDataSetChanged")
+//            override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                mUser.clear()
+//                for (snapShot in dataSnapshot.children) {
+//                    val user = snapShot.getValue(User::class.java)
+//                    val fullName = snapShot.child("fullname").value.toString()
+//                    val userName = snapShot.child("username").value.toString()
+//                    val bio = snapShot.child("bio").value.toString()
+//                    val image = snapShot.child("image").value.toString()
+//                    val uid = snapShot.child("uid").value.toString()
+//
+//                    Users(userName, fullName, bio, image, uid)
+//                    if (user != null) {
+//                        mUser.add(Users(userName, fullName, bio, image, uid))
+//                    }
+//                    useradapter.notifyDataSetChanged()
+//                }
+//            }
+//        })
+//    }
 
 }
