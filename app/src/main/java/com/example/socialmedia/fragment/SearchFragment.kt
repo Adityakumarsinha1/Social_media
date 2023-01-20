@@ -2,29 +2,23 @@ package com.example.socialmedia.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Adapter
 import android.widget.SearchView
-import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.socialmedia.R
+import com.example.socialmedia.adapter.FollowButtonClicked
 import com.example.socialmedia.adapter.Useradapter
-import com.example.socialmedia.databinding.FragmentHomeBinding
 import com.example.socialmedia.databinding.FragmentSearchBinding
+import com.example.socialmedia.firebaseUser
 import com.example.socialmedia.model.Users
+import com.example.socialmedia.util.UserUtil.user
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.firestore.auth.User
 
-class SearchFragment  : Fragment(R.layout.fragment_search) {
+class SearchFragment  : Fragment(R.layout.fragment_search) , FollowButtonClicked{
 
     val mUser = ArrayList<Users>()
     lateinit var useradapter: Useradapter
@@ -37,7 +31,7 @@ class SearchFragment  : Fragment(R.layout.fragment_search) {
         _binding = FragmentSearchBinding.bind(view)
 
         binding.searchRV.layoutManager = LinearLayoutManager(context)
-        useradapter = Useradapter()
+        useradapter = Useradapter(this)
         binding.searchRV.adapter = useradapter
 
 
@@ -71,7 +65,6 @@ class SearchFragment  : Fragment(R.layout.fragment_search) {
             }
             @SuppressLint("NotifyDataSetChanged")
             override fun onDataChange(datasnapshot: DataSnapshot) {
-                Log.d("@@@@@@@@","user=${datasnapshot}")
 
                 mUser.clear()
 
@@ -117,5 +110,49 @@ class SearchFragment  : Fragment(R.layout.fragment_search) {
 //            }
 //        })
 //    }
+    override fun onItemClick(item:Users){
+    firebaseUser?.uid.let { it1 ->
+        FirebaseDatabase.getInstance("https://socialmedia-e0647-default-rtdb.asia-southeast1.firebasedatabase.app").reference
+            .child("Follow").child(it1.toString())
+            .child("Following").get().addOnSuccessListener {
+//                    Log.d("@@@@@@@@","user=${it}")
+                if (it.hasChild(item.uid.toString())) {
+                    //        unfollowing users
+                    firebaseUser?.uid.let { it1 ->
+                        FirebaseDatabase.getInstance("https://socialmedia-e0647-default-rtdb.asia-southeast1.firebasedatabase.app").reference
+                            .child("Follow").child(it1.toString())
+                            .child("Following").child(item?.uid.toString())
+                            .removeValue()
+                            .addOnCompleteListener { task -> //reversing following action
+                                if (task.isSuccessful) {
+                                    firebaseUser?.uid.let { it1 ->
+                                        FirebaseDatabase.getInstance("https://socialmedia-e0647-default-rtdb.asia-southeast1.firebasedatabase.app").reference
+                                            .child("Follow").child(item?.uid.toString())
+                                            .child("Followers").child(it1.toString())
+                                            .removeValue()
 
+                                    }
+                                }
+                            }
+                    }
+                }
+                else {
+//                            following users
+                    firebaseUser?.uid.let { it1 ->
+                        FirebaseDatabase.getInstance("https://socialmedia-e0647-default-rtdb.asia-southeast1.firebasedatabase.app").reference
+                            .child("Follow").child(it1.toString())
+                            .child("Following").child(item?.uid.toString())
+                            .setValue(true).addOnSuccessListener {
+                                    firebaseUser?.uid.let { it1 ->
+                                        FirebaseDatabase.getInstance("https://socialmedia-e0647-default-rtdb.asia-southeast1.firebasedatabase.app").reference
+                                            .child("Follow").child(item?.uid.toString())
+                                            .child("Followers").child(it1.toString())
+                                            .setValue(true)
+                                    }
+                            }
+                    }
+                }
+            }
+        }
+    }
 }

@@ -102,7 +102,7 @@ class RegisterActivity : AppCompatActivity() {
                     Toast.makeText(this, "Account has been created", Toast.LENGTH_SHORT).show()
 
 //                    to follow own account by default
-                    FirebaseDatabase.getInstance().reference
+                    FirebaseDatabase.getInstance("https://socialmedia-e0647-default-rtdb.asia-southeast1.firebasedatabase.app").reference
                         .child("Follow").child(currentUserId)
                         .child("Following").child(currentUserId)
                         .setValue(true)
