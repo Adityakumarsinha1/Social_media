@@ -115,11 +115,13 @@
                         android:orientation="vertical"
                         android:layout_marginLeft="30dp"
                         android:layout_marginRight="10dp"
+                        android:id="@+id/postscountblock"
                         >
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
+                            android:id="@+id/postcount"
                             android:layout_gravity="center"
                             android:textStyle="bold"/>
                         <TextView
@@ -134,12 +136,14 @@
                         android:layout_marginTop="20dp"
                         android:orientation="vertical"
                         android:layout_marginEnd="10dp"
+                        android:id="@+id/followingblock"
                         >
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
                             android:layout_gravity="center"
+                            android:id="@+id/followngcount"
                             android:textStyle="bold"/>
                         <TextView
                             android:layout_width="wrap_content"
@@ -153,12 +157,14 @@
                         android:orientation="vertical"
                         android:layout_marginTop="20dp"
                         android:layout_marginEnd="10dp"
+                        android:id="@+id/followersblock"
                         >
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
                             android:layout_gravity="center"
+                            android:id="@+id/followerscount"
                             android:textStyle="bold"/>
                         <TextView
                             android:layout_width="wrap_content"
@@ -182,14 +188,14 @@
 
 
         <!--    </ScrollView>-->
-        <ScrollView
-            android:id="@+id/scrollview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp">
+<!--        <ScrollView-->
+<!--            android:id="@+id/scrollview"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_marginStart="5dp"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:layout_marginEnd="5dp"-->
+<!--            android:layout_marginBottom="5dp">-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -204,12 +210,13 @@
                     />
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/posts_recyclerview"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/posts_recyclerview"/>
+                    tools:listitem="@layout/myposts" />
             </LinearLayout>
 
-        </ScrollView>
+<!--        </ScrollView>-->
 
     </LinearLayout>
 

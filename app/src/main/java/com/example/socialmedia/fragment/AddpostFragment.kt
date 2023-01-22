@@ -16,6 +16,7 @@ import com.example.socialmedia.R
 import com.example.socialmedia.databinding.FragmentAddpostBinding
 import com.example.socialmedia.databinding.FragmentHomeBinding
 import com.example.socialmedia.firebaseUser
+import com.example.socialmedia.model.Posts
 import com.example.socialmedia.model.Users
 import com.example.socialmedia.util.UserUtil
 import com.google.firebase.database.FirebaseDatabase
@@ -60,12 +61,13 @@ class AddpostFragment  : Fragment(R.layout.fragment_addpost) {
     }
 
     private fun uploaddata() {
+
         val reference = storage.reference.child("Posts").child(firebaseUser.uid)
         reference.putFile(imageUri).addOnCompleteListener {
             if (it.isSuccessful) {
                 reference.downloadUrl.addOnSuccessListener {  task ->
-//                    uploadinfo(task.toString())
-                            Log.d("@","user=${task.toString()}")
+                    uploadinfo(task.toString())
+//                            Log.d("@","user=${task.toString()}")
 
                 }
             }
@@ -73,11 +75,21 @@ class AddpostFragment  : Fragment(R.layout.fragment_addpost) {
     }
 
     private fun uploadinfo(toString: String) {
-//        val user= Users(firebaseUser.uid,binding.editFullname.text.toString(),
-//            firebaseUser.email.toString(),binding.editBio.text.toString(),binding.editUsername.text.toString(),
-//            imageurl)
+        val likes= ArrayList<String>()
+        likes.add(UserUtil.user?.username.toString())
+        val con= ArrayList<String>()
+        con.add(UserUtil.user?.username.toString())
+        con.add(binding.postcaption.text.toString())
+        val comments= ArrayList<ArrayList<String>>()
+        comments.add(con)
+
+        val post= Posts(toString,
+            binding.postcaption.text.toString(),
+            System.currentTimeMillis().toString(),
+            likes, comments)
+        Log.d("@","user=${post}")
         database.reference.child("Posts").child(firebaseUser.uid).child(System.currentTimeMillis().toString())
-            .setValue(toString, binding.postcaption).addOnSuccessListener {
+            .setValue(post).addOnSuccessListener {
                 context?.startActivity(Intent(activity, MainActivity::class.java))
                 activity?.finish()
             }

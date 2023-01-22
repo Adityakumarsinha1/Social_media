@@ -26,8 +26,8 @@ class Useradapter(private val listener: FollowButtonClicked): RecyclerView.Adapt
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemview = LayoutInflater.from(parent.context).inflate(
             R.layout.user_item_layout,
-            parent,false
-        )
+            parent,false)
+
         val viewHolder = MyViewHolder(itemview)
         itemview.findViewById<Button>(R.id.searchfragmentfollowbutton)
             .setOnClickListener {
@@ -57,9 +57,6 @@ class Useradapter(private val listener: FollowButtonClicked): RecyclerView.Adapt
                     }
                 }
         }
-
-
-
     }
 
     override fun getItemCount(): Int {
@@ -72,60 +69,6 @@ class Useradapter(private val listener: FollowButtonClicked): RecyclerView.Adapt
         this.userList.addAll(userList)
         notifyDataSetChanged()
     }
-
-
-
-//    fun checkFollowingStatus(){
-//
-//        firebaseUser?.uid.let { it1 ->
-//            FirebaseDatabase.getInstance().reference
-//                .child("Follow").child(it1.toString())
-//                .child("Following").get().addOnSuccessListener {
-//                    if (it.hasChild(user?.uid.toString()))
-//                    {
-//                        //        unfollowing users
-//
-//                        firebaseUser?.uid.let { it1 ->
-//                            FirebaseDatabase.getInstance().reference
-//                                .child("Follow").child(it1.toString())
-//                                .child("Following").child(user?.uid.toString())
-//                                .removeValue().addOnCompleteListener { task -> //reversing following action
-//                                    if (task.isSuccessful) {
-//                                        firebaseUser?.uid.let { it1 ->
-//                                            FirebaseDatabase.getInstance().reference
-//                                                .child("Follow").child(user?.uid.toString())
-//                                                .child("Followers").child(it1.toString())
-//                                                .removeValue()
-//
-//                                        }
-//                                    }
-//                                }
-//                        }
-//
-//                    }
-//                    else
-//                    {
-//                        //following users
-//                        firebaseUser?.uid.let { it1 ->
-//                            FirebaseDatabase.getInstance().reference
-//                                .child("Follow").child(it1.toString())
-//                                .child("Following").child(user?.uid.toString())
-//                                .setValue(true).addOnCompleteListener { task ->
-//                                    if (task.isSuccessful) {
-//
-//                                        firebaseUser?.uid.let { it1 ->
-//                                            FirebaseDatabase.getInstance().reference
-//                                                .child("Follow").child(user?.uid.toString())
-//                                                .child("Followers").child(it1.toString())
-//                                                .setValue(true)
-//                                        }
-//                                    }
-//                                }
-//                        }
-//                    }
-//                }
-//        }
-//    }
 
     class MyViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) {
         val username: TextView = itemview.findViewById(R.id.searchfragmentuserusername)
