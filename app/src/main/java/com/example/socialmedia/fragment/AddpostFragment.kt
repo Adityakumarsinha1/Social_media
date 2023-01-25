@@ -80,6 +80,7 @@ class AddpostFragment  : Fragment(R.layout.fragment_addpost) {
         val con= ArrayList<String>()
         con.add(UserUtil.user?.username.toString())
         con.add(binding.postcaption.text.toString())
+        con.add(firebaseUser.uid)
         val comments= ArrayList<ArrayList<String>>()
         comments.add(con)
 

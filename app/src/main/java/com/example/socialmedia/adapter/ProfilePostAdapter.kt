@@ -32,9 +32,20 @@ class ProfilePostAdapter (private val listener:CommentsButtonClicked): RecyclerV
         Log.d("@","ocvh=${postList}")
         val viewHolder = MyViewHolder(itemview)
 
-        itemview.setOnClickListener {
-                listener.onItemClick(postList[viewHolder.absoluteAdapterPosition])
-            }
+
+
+        itemview.findViewById<ImageView>(R.id.comments).setOnClickListener {
+            listener.onCommentClick(postList[viewHolder.absoluteAdapterPosition])
+        }
+        itemview.findViewById<ImageView>(R.id.likebutton).setOnClickListener {
+            listener.onLikeClick(postList[viewHolder.absoluteAdapterPosition])
+        }
+        itemview.findViewById<ImageView>(R.id.postcommentbutton).setOnClickListener {
+            listener.onPostCommentClick(postList[viewHolder.absoluteAdapterPosition])
+        }
+        itemview.findViewById<ImageView>(R.id.likebutton).setOnClickListener {
+            listener.onShareClick(postList[viewHolder.absoluteAdapterPosition])
+        }
 
         return MyViewHolder(itemview)
     }
@@ -47,6 +58,8 @@ class ProfilePostAdapter (private val listener:CommentsButtonClicked): RecyclerV
         holder.username.text=UserUtil.user?.username
         holder.time.setText(currentitem.uploadtime)
         holder.caption.setText(currentitem.caption)
+        holder.likecount.setText(currentitem.likes?.size.toString())
+        holder.commentcount.setText(currentitem.comments?.size.toString())
         Glide.with(holder.itemView.context).load(currentitem.imageUrl).into(holder.imageurl)
     }
 
@@ -70,10 +83,15 @@ class ProfilePostAdapter (private val listener:CommentsButtonClicked): RecyclerV
         val time: TextView = itemview.findViewById(R.id.posttime)
         val caption:TextView = itemview.findViewById(R.id.profilepostcaption)
         val imageurl: ImageView = itemview.findViewById(R.id.profilepostimage)
+        val likecount:TextView = itemview.findViewById(R.id.likecount)
+        val commentcount:TextView = itemview.findViewById(R.id.commentscount)
 
     }
 }
 
 interface CommentsButtonClicked {
-    fun onItemClick(item: Posts)
+    fun onCommentClick(item: Posts)
+    fun onLikeClick(item: Posts)
+    fun onPostCommentClick(item: Posts)
+    fun onShareClick(item: Posts)
 }

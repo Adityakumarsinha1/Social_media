@@ -36,6 +36,7 @@ class SearchFragment  : Fragment(R.layout.fragment_search) , FollowButtonClicked
 
         binding.searchItem.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
+                if (!query.isNullOrEmpty())
                 searchUser(query.toString())
                 return false
             }

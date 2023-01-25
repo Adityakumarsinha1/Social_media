@@ -29,6 +29,7 @@ class Useradapter(private val listener: FollowButtonClicked): RecyclerView.Adapt
             parent,false)
 
         val viewHolder = MyViewHolder(itemview)
+
         itemview.findViewById<Button>(R.id.searchfragmentfollowbutton)
             .setOnClickListener {
                 listener.onItemClick(userList[viewHolder.absoluteAdapterPosition])
@@ -42,7 +43,10 @@ class Useradapter(private val listener: FollowButtonClicked): RecyclerView.Adapt
 
         holder.fullname.text = currentitem.fullname
         holder.username.text = currentitem.username
-        Glide.with(holder.itemView.context).load(currentitem.imageUrl).into(holder.imageurl)
+        Glide.with(holder.itemView.context)
+            .load(currentitem.imageUrl)
+            .placeholder(R.drawable.profile)
+            .into(holder.imageurl)
 
 
         firebaseUser?.uid.let { it1 ->

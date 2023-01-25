@@ -17,7 +17,7 @@
         android:title="@string/addpost" />
     <item
         android:id="@+id/navigation_notifications"
-        android:icon="@drawable/notification"
+        android:icon="@drawable/message"
         android:title="@string/notification" />
 
     <item

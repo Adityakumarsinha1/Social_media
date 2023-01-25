@@ -4,16 +4,14 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.socialmedia.R
-import com.example.socialmedia.adapter.CommentsButtonClicked
-import com.example.socialmedia.adapter.HomeAdapter
-import com.example.socialmedia.adapter.HomePostAdapter
-import com.example.socialmedia.adapter.ProfilePostAdapter
+import com.example.socialmedia.adapter.*
 import com.example.socialmedia.databinding.FragmentHomeBinding
+import com.example.socialmedia.firebaseUser
 import com.example.socialmedia.model.Posts
-import com.example.socialmedia.model.Users
 import com.example.socialmedia.util.UserUtil
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -21,7 +19,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
 
-class HomeFragment : Fragment(R.layout.fragment_home), CommentsButtonClicked {
+class HomeFragment : Fragment(R.layout.fragment_home), CommentButtonClicked {
 
     var mPost = ArrayList<Posts>()
     var owner = ArrayList<ArrayList<String>>()
@@ -83,8 +81,37 @@ class HomeFragment : Fragment(R.layout.fragment_home), CommentsButtonClicked {
                 })
             }
         }
+//    implementing recycler view clicks
 
-        override fun onItemClick(item: Posts) {
-            TODO("Not yet implemented")
-        }
+    override fun onCommentClick(item: Posts) {
+        TODO("Not yet implemented")
     }
+
+    override fun onLikeClick(item: Posts) {
+//        Toast.makeText(context, "liked the post", Toast.LENGTH_LONG).show()
+
+//        val likecount = ArrayList<String>()
+//        likecount.addAll(listOf(item.likes.toString()))
+//
+//        item.likes = likecount
+//
+//        if (!likecount.contains(firebaseUser.uid)) item.likes!!.add(firebaseUser.uid)
+//        else item.likes!!.remove(firebaseUser.uid)
+//
+//        FirebaseDatabase.getInstance("https://socialmedia-e0647-default-rtdb.asia-southeast1.firebasedatabase.app")
+//            .reference
+//            .child("Posts")
+//            .child(owner[2].toString())
+//            .child(item.uploadtime.toString())
+//            .setValue(item)
+    }
+
+    override fun onPostCommentClick(item: Posts) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onShareClick(item: Posts) {
+        TODO("Not yet implemented")
+    }
+
+}

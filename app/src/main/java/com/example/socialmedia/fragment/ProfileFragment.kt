@@ -120,8 +120,21 @@ class ProfileFragment  : Fragment(R.layout.fragment_profile) , CommentsButtonCli
         })
     }
 
-    override fun onItemClick(item: Posts) {
+    override fun onCommentClick(item: Posts) {
         TODO("Not yet implemented")
     }
+
+    override fun onLikeClick(item: Posts) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onPostCommentClick(item: Posts) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onShareClick(item: Posts) {
+        TODO("Not yet implemented")
+    }
+
 
 }
