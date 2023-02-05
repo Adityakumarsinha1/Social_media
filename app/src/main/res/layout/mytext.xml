@@ -1,6 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginStart="30dp"
+    android:layout_width="380dp"
+    android:layout_marginVertical="3dp"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints">
 
+            <TextView
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/stext"
+                android:gravity="right"
+                android:textSize="20sp"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="60dp"
+                android:text="hellow how u doin!"/>
+
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/stexttime"
+            android:layout_marginVertical="5dp"
+
+            android:text="DD|HH|MM"
+            android:layout_marginHorizontal="5dp"
+            android:textSize="10sp"/>
+
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

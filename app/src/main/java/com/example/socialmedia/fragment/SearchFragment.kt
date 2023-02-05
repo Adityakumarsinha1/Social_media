@@ -35,6 +35,7 @@ class SearchFragment  : Fragment(R.layout.fragment_search) , FollowButtonClicked
 
 
         binding.searchItem.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            @SuppressLint("SuspiciousIndentation")
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (!query.isNullOrEmpty())
                 searchUser(query.toString())

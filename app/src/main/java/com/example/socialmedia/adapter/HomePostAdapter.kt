@@ -56,7 +56,6 @@ class HomePostAdapter (private val listener:CommentButtonClicked): RecyclerView.
 
         val calendar = currentitem.uploadtime!!.toLong()
         val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy")
-//        Log.d("@@@","uu=${calendar}")
         val dateTime = simpleDateFormat.format(calendar).toString()
 
 //        Log.d("@@@","u=${currentitem.uploadtime}")

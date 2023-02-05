@@ -4,22 +4,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.socialmedia.R
-import com.example.socialmedia.model.Posts
 import com.example.socialmedia.model.Users
 import java.util.ArrayList
 
-class ChatlistAdapter: RecyclerView.Adapter<ChatlistAdapter.MyViewHolder>() {
+class ChatlistAdapter (private val listener: ContactClicked): RecyclerView.Adapter<ChatlistAdapter.MyViewHolder>() {
 
-    var chatList=ArrayList<Users>()
+    var chatList = ArrayList<Users>()
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemview = LayoutInflater.from(parent.context).inflate(
             R.layout.contacts,
-            parent,false)
+            parent, false
+        )
+
         return MyViewHolder(itemview)
     }
 
@@ -27,6 +30,9 @@ class ChatlistAdapter: RecyclerView.Adapter<ChatlistAdapter.MyViewHolder>() {
 
         val currentitem = chatList[position]
 
+        holder.block.setOnClickListener {
+            listener.onItemClick(currentitem)
+        }
         holder.username.setText(currentitem.username)
         holder.message.setText(currentitem.email)
         Glide.with(holder.itemView.context)
@@ -39,8 +45,7 @@ class ChatlistAdapter: RecyclerView.Adapter<ChatlistAdapter.MyViewHolder>() {
         return chatList.size
     }
 
-    fun updateChatList(chatList : ArrayList<Users>)
-    {
+    fun updateChatList(chatList: ArrayList<Users>) {
 
         this.chatList.clear()
 
@@ -54,5 +59,10 @@ class ChatlistAdapter: RecyclerView.Adapter<ChatlistAdapter.MyViewHolder>() {
         val username: TextView = itemview.findViewById(R.id.contactusername)
         val message: TextView = itemview.findViewById(R.id.contactmessage)
         val imageurl: ImageView = itemview.findViewById(R.id.contactprofile)
-        }
+        val block: LinearLayout = itemview.findViewById(R.id.onecontactblock)
+    }
+}
+
+interface ContactClicked {
+    fun onItemClick(item: Users)
 }
