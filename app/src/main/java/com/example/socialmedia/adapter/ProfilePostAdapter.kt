@@ -5,10 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.socialmedia.R
@@ -29,23 +26,8 @@ class ProfilePostAdapter (private val listener:CommentsButtonClicked): RecyclerV
             parent,false)
 
 
-        Log.d("@","ocvh=${postList}")
-        val viewHolder = MyViewHolder(itemview)
+//        Log.d("@","ocvh=${postList}")
 
-
-
-        itemview.findViewById<ImageView>(R.id.comments).setOnClickListener {
-            listener.onCommentClick(postList[viewHolder.absoluteAdapterPosition])
-        }
-        itemview.findViewById<ImageView>(R.id.likebutton).setOnClickListener {
-            listener.onLikeClick(postList[viewHolder.absoluteAdapterPosition])
-        }
-        itemview.findViewById<ImageView>(R.id.postcommentbutton).setOnClickListener {
-            listener.onPostCommentClick(postList[viewHolder.absoluteAdapterPosition])
-        }
-        itemview.findViewById<ImageView>(R.id.likebutton).setOnClickListener {
-            listener.onShareClick(postList[viewHolder.absoluteAdapterPosition])
-        }
 
         return MyViewHolder(itemview)
     }
@@ -53,7 +35,38 @@ class ProfilePostAdapter (private val listener:CommentsButtonClicked): RecyclerV
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val currentitem = postList[position]
 
-        Log.d("@@","pp=${currentitem}")
+
+
+
+//        implementiong on clicks for like block
+        holder.likeblock.setOnClickListener {
+            listener.onLikeClick(currentitem)
+        }
+
+//        implementiong on clicks for comment block
+        holder.commentblock.setOnClickListener {
+            listener.onCommentClick(currentitem)
+        }
+
+//        implementiong on clicks for share button
+        holder.sharepost.setOnClickListener {
+            listener.onShareClick(currentitem)
+        }
+
+//        implementiong on clicks for post comment buttons
+        holder.postcomment.setOnClickListener {
+            listener.onPostCommentClick(currentitem)
+        }
+
+        if (currentitem.likes?.size!=null)
+        if (currentitem.likes?.contains(UserUtil.user?.username)!!)
+        {
+            Glide.with(holder.itemView.context)
+                .load("")
+                .placeholder(R.drawable.liked)
+                .centerCrop()
+                .into(holder.likeimage)
+        }
 
         holder.username.text=UserUtil.user?.username
         holder.time.setText(currentitem.uploadtime)
@@ -85,6 +98,14 @@ class ProfilePostAdapter (private val listener:CommentsButtonClicked): RecyclerV
         val imageurl: ImageView = itemview.findViewById(R.id.profilepostimage)
         val likecount:TextView = itemview.findViewById(R.id.likecount)
         val commentcount:TextView = itemview.findViewById(R.id.commentscount)
+
+
+        //        On click blocks
+        val likeimage:ImageView = itemview.findViewById(R.id.likebutton)
+        val sharepost: ImageView = itemview.findViewById(R.id.sharepostbutton)
+        val postcomment: ImageView = itemview.findViewById(R.id.postcommentbutton)
+        val likeblock: LinearLayout = itemview.findViewById(R.id.likeblock)
+        val commentblock:LinearLayout = itemview.findViewById(R.id.commentblock)
 
     }
 }
