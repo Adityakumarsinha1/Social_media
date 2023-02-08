@@ -10,14 +10,11 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.socialmedia.EditProfileActivity
-import com.example.socialmedia.LoginActivity
-import com.example.socialmedia.R
+import com.example.socialmedia.*
 import com.example.socialmedia.adapter.CommentsButtonClicked
 import com.example.socialmedia.adapter.ProfilePostAdapter
 import com.example.socialmedia.adapter.Useradapter
 import com.example.socialmedia.databinding.FragmentProfileBinding
-import com.example.socialmedia.firebaseUser
 import com.example.socialmedia.model.Posts
 import com.example.socialmedia.model.Users
 import com.example.socialmedia.util.UserUtil
@@ -26,6 +23,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.io.Serializable
 
 class ProfileFragment  : Fragment(R.layout.fragment_profile) , CommentsButtonClicked{
 
@@ -126,6 +124,12 @@ class ProfileFragment  : Fragment(R.layout.fragment_profile) , CommentsButtonCli
 //    implementing recycler view clicks
 
     override fun onCommentClick(item: Posts) {
+        val intent = Intent(activity, CommentsActivity::class.java)
+        val args = Bundle()
+        args.putSerializable("ARRAYLIST", item.comments as Serializable)
+        intent.putExtra("BUNDLE", args)
+        startActivity(intent)
+
         Toast.makeText(context, "Opening all comments", Toast.LENGTH_LONG).show()
     }
 
@@ -173,15 +177,11 @@ class ProfileFragment  : Fragment(R.layout.fragment_profile) , CommentsButtonCli
         }
     }
 
-    override fun onPostCommentClick(item: Posts) {
-        Toast.makeText(context, "posted a comment", Toast.LENGTH_LONG).show()
-    }
-
     override fun onShareClick(item: Posts) {
 
         val intent=Intent(Intent.ACTION_SEND)
         intent.type="text/plain"
-        intent.putExtra(Intent.EXTRA_TEXT,"check this meme out!  \n+${item.caption}+\n+${item.imageUrl}")
+        intent.putExtra(Intent.EXTRA_TEXT,"check this post out!  \n"+"Caption : ${item.caption}\n"+"Image : ${item.imageUrl}")
         val chooser=Intent.createChooser(intent,"share this Post using...")
         startActivity(chooser)
         Toast.makeText(context, "Share button clicked", Toast.LENGTH_LONG).show()

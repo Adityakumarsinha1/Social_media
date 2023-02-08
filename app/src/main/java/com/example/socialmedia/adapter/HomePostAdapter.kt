@@ -5,14 +5,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.socialmedia.R
 import com.example.socialmedia.model.Posts
 import com.example.socialmedia.util.UserUtil
+import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -57,7 +60,23 @@ class HomePostAdapter (private val listener:CommentButtonClicked): RecyclerView.
 
 //        implementiong on clicks for post comment buttons
         holder.postcomment.setOnClickListener {
-            listener.onPostCommentClick(currentitem)
+            if(!holder.comment.text.isNullOrEmpty())
+            {
+                var comment = ArrayList<String>()
+                comment.add(UserUtil.user?.username.toString())
+                comment.add(holder.comment.text.toString())
+                comment.add(UserUtil.user?.uid.toString())
+                currentitem.comments!!.add(comment)
+                FirebaseDatabase.getInstance("https://socialmedia-e0647-default-rtdb.asia-southeast1.firebasedatabase.app")
+                    .reference
+                    .child("Posts")
+                    .child(currentowner[2])
+                    .child(currentitem.uploadtime.toString()).child("comments")
+                    .setValue(currentitem.comments).addOnSuccessListener {
+                        holder.comment.setText("")
+                    }
+            }
+
         }
 
 
@@ -109,6 +128,7 @@ class HomePostAdapter (private val listener:CommentButtonClicked): RecyclerView.
         val imageurl: ImageView = itemview.findViewById(R.id.profilepostimage)
         val likecount:TextView = itemview.findViewById(R.id.likecount)
         val commentcount:TextView = itemview.findViewById(R.id.commentscount)
+        val comment:EditText = itemview.findViewById(R.id.commenttext)
 
 //        On click blocks
         val likeimage:ImageView = itemview.findViewById(R.id.likebutton)
@@ -116,15 +136,11 @@ class HomePostAdapter (private val listener:CommentButtonClicked): RecyclerView.
         val postcomment: ImageView = itemview.findViewById(R.id.postcommentbutton)
         val likeblock:LinearLayout= itemview.findViewById(R.id.likeblock)
         val commentblock:LinearLayout = itemview.findViewById(R.id.commentblock)
-
-
-
     }
 }
 
 interface CommentButtonClicked {
     fun onCommentClick(item: Posts)
     fun onLikeClick(item: Posts)
-    fun onPostCommentClick(item: Posts)
     fun onShareClick(item: Posts)
 }

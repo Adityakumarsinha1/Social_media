@@ -106,8 +106,7 @@ class ChatRoomActivity : AppCompatActivity() {
                             .child("Messages").push()
                             .setValue(messageObject)
                     }
-                Log.d("@@@", "messgae=${binding.themessage.text}")
-
+//                Log.d("@@@", "messgae=${binding.themessage.text}")
             } else {
                 Toast.makeText(this, "Type the message to send", Toast.LENGTH_SHORT).show()
             }

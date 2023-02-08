@@ -55,7 +55,23 @@ class ProfilePostAdapter (private val listener:CommentsButtonClicked): RecyclerV
 
 //        implementiong on clicks for post comment buttons
         holder.postcomment.setOnClickListener {
-            listener.onPostCommentClick(currentitem)
+            var currentowner=currentitem.comments!![0]
+            if(!holder.comment.text.isNullOrEmpty())
+            {
+                var comment = ArrayList<String>()
+                comment.add(UserUtil.user?.username.toString())
+                comment.add(holder.comment.text.toString())
+                comment.add(UserUtil.user?.uid.toString())
+                currentitem.comments!!.add(comment)
+                FirebaseDatabase.getInstance("https://socialmedia-e0647-default-rtdb.asia-southeast1.firebasedatabase.app")
+                    .reference
+                    .child("Posts")
+                    .child(currentowner[2])
+                    .child(currentitem.uploadtime.toString()).child("comments")
+                    .setValue(currentitem.comments).addOnSuccessListener {
+                        holder.comment.setText("")
+                    }
+            }
         }
 
         if (currentitem.likes?.size!=null)
@@ -98,6 +114,7 @@ class ProfilePostAdapter (private val listener:CommentsButtonClicked): RecyclerV
         val imageurl: ImageView = itemview.findViewById(R.id.profilepostimage)
         val likecount:TextView = itemview.findViewById(R.id.likecount)
         val commentcount:TextView = itemview.findViewById(R.id.commentscount)
+        val comment:EditText = itemview.findViewById(R.id.commenttext)
 
 
         //        On click blocks
@@ -113,6 +130,5 @@ class ProfilePostAdapter (private val listener:CommentsButtonClicked): RecyclerV
 interface CommentsButtonClicked {
     fun onCommentClick(item: Posts)
     fun onLikeClick(item: Posts)
-    fun onPostCommentClick(item: Posts)
     fun onShareClick(item: Posts)
 }

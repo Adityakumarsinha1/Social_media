@@ -3,21 +3,24 @@ package com.example.socialmedia.fragment
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.socialmedia.ChatRoomActivity
+import com.example.socialmedia.CommentsActivity
 import com.example.socialmedia.R
 import com.example.socialmedia.adapter.*
 import com.example.socialmedia.databinding.FragmentHomeBinding
-import com.example.socialmedia.firebaseUser
 import com.example.socialmedia.model.Posts
 import com.example.socialmedia.util.UserUtil
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import org.checkerframework.checker.units.qual.Current
+import java.io.Serializable
 
 
 class HomeFragment : Fragment(R.layout.fragment_home), CommentButtonClicked {
@@ -92,6 +95,12 @@ class HomeFragment : Fragment(R.layout.fragment_home), CommentButtonClicked {
 //    implementing recycler view clicks
 
     override fun onCommentClick(item: Posts) {
+        val intent = Intent(activity, CommentsActivity::class.java)
+        val args = Bundle()
+        args.putSerializable("ARRAYLIST", item.comments as Serializable)
+        intent.putExtra("BUNDLE", args)
+        startActivity(intent)
+
         Toast.makeText(context, "Opening all comments", Toast.LENGTH_LONG).show()
     }
 
@@ -101,8 +110,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), CommentButtonClicked {
 
         if (item.likes.isNullOrEmpty())
         {
-//            item.likes.equals(UserUtil.user?.username.toString())
-            FirebaseDatabase.getInstance("https://socialmedia-e0647-default-rtdb.asia-southeast1.firebasedatabase.app")
+                database
                 .reference
                 .child("Posts")
                 .child(cowner[2])
@@ -116,7 +124,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), CommentButtonClicked {
         else if (item.likes!!.contains(UserUtil.user?.username))
         {
             item.likes!!.remove(UserUtil.user?.username.toString())
-            FirebaseDatabase.getInstance("https://socialmedia-e0647-default-rtdb.asia-southeast1.firebasedatabase.app")
+            database
                 .reference
                 .child("Posts")
                 .child(cowner[2].toString())
@@ -125,13 +133,12 @@ class HomeFragment : Fragment(R.layout.fragment_home), CommentButtonClicked {
                     showpost()
                     Toast.makeText(context, "unliked the post", Toast.LENGTH_LONG).show()
                 }
-
         }
         else
         {
 
             item.likes!!.add(UserUtil.user?.username.toString())
-            FirebaseDatabase.getInstance("https://socialmedia-e0647-default-rtdb.asia-southeast1.firebasedatabase.app")
+            database
             .reference
             .child("Posts")
             .child(cowner[2].toString())
@@ -143,26 +150,10 @@ class HomeFragment : Fragment(R.layout.fragment_home), CommentButtonClicked {
         }
     }
 
-    override fun onPostCommentClick(item: Posts) {
-//        var comment = ArrayList<String>()
-//        comment.add(UserUtil.user?.username.toString())
-//        comment.add("")
-//        comment.add(UserUtil.user?.uid.toString())
-//        FirebaseDatabase.getInstance("https://socialmedia-e0647-default-rtdb.asia-southeast1.firebasedatabase.app")
-//            .reference
-//            .child("Posts")
-//            .child(cowner[2].toString())
-//            .child(item.uploadtime.toString()).child("comments")
-//            .setValue(item.likes).addOnSuccessListener {
-//                showpost()
-//                Toast.makeText(context, "posted a comment", Toast.LENGTH_LONG).show()
-//            }
-    }
-
     override fun onShareClick(item: Posts) {
         val intent= Intent(Intent.ACTION_SEND)
         intent.type="text/plain"
-        intent.putExtra(Intent.EXTRA_TEXT,"check this meme out!  \n+${item.caption}+\n+${item.imageUrl}")
+        intent.putExtra(Intent.EXTRA_TEXT,"check this post out!  \n"+"Caption : ${item.caption}\n"+"Image : ${item.imageUrl}")
         val chooser= Intent.createChooser(intent,"share this Post using...")
         startActivity(chooser)
         Toast.makeText(context, "Share button clicked", Toast.LENGTH_LONG).show()
